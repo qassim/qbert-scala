@@ -21,6 +21,6 @@ object Main extends App {
   manager.init()
 
   client.onMessage { message =>
-      executor.exec(message.channel, message.text)
+      executor.exec(message)
   }
 }

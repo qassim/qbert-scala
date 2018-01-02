@@ -8,6 +8,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scalaj.http._
 import org.json4s._
 import org.json4s.native.JsonMethods._
+import slack.models.Message
 import slack.rtm.SlackRtmClient
 
 import scala.collection.mutable.ArrayBuffer
@@ -38,12 +39,12 @@ class Metrolink extends Plugin {
   def name(): String = "Metrolink"
   def pluginType(): String = "command"
 
-  def action(channel: String, args: String, client: SlackRtmClient) = {
+  def action(message: Message, args: String, client: SlackRtmClient) = {
     if (args.contains("stations")) {
-      client.sendMessage(channel, s"The following stations are available (match case for now): ${availableStations.mkString(", ")}")
+      client.sendMessage(message.channel, s"The following stations are available (match case for now): ${availableStations.mkString(", ")}")
     } else {
       apiRequest onSuccess {
-        case response => filterAndRespond(channel, args, response, client)
+        case response => filterAndRespond(message.channel, args, response, client)
       }
     }
   }

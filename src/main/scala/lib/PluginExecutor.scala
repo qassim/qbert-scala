@@ -1,11 +1,13 @@
 package lib
 
 import com.typesafe.config.ConfigFactory
+import slack.models.Message
 import slack.rtm.SlackRtmClient
 
 class PluginExecutor(client: SlackRtmClient, pluginManager: PluginManager) {
 
-  def exec(channel: String, text: String) = {
+  def exec(message: Message) = {
+    val text = message.text
     val command = getCommand(text)
     val commandArgs = getArgs(text)
     val conf = ConfigFactory.load()
@@ -13,9 +15,9 @@ class PluginExecutor(client: SlackRtmClient, pluginManager: PluginManager) {
 
     pluginManager.getPlugins.foreach { pclass =>
         if (isCommand && pclass.name.toUpperCase.equals(command)) {
-          pluginManager.getPlugin(pclass.path).action(channel, commandArgs, client)
+          pluginManager.getPlugin(pclass.path).action(message, commandArgs, client)
         } else if (pclass.pluginType.equals("eventListener") && !isCommand) {
-          pluginManager.getPlugin(pclass.path).action(channel, commandArgs, client)
+          pluginManager.getPlugin(pclass.path).action(message, commandArgs, client)
         }
     }
   }

@@ -13,7 +13,7 @@ class Logger extends Plugin {
 
   def action(message: Message, args: String, client: SlackRtmClient) = {
     implicit val formats = DefaultFormats
-    Http("http://127.0.0.1:3000/api/submit").postData(write(message)).header("content-type", "application/json").asString.code
+   // Http("http://127.0.0.1:3000/api/submit").postData(write(message)).header("content-type", "application/json").asString.code
 
   }
 

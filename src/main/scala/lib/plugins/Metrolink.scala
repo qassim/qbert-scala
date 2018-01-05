@@ -30,18 +30,22 @@ case class Train(Id: Int,
                  Dest2: String,
                  Carriages0: String,
                  Carriages1: String,
-                 Carriages2: String)
+                 Carriages2: String,
+                 PIDREF: String)
 
 class Metrolink extends Plugin {
-  private val availableStations = List("Piccadilly", "MediaCityUK", "Bury", "Deansgate - Castlefield", "A load more but I haven't yet normalised the API results -> input")
+  private val availableStations = List("Piccadilly", "MediaCityUK", "Bury", "Deansgate", "A load more but I haven't yet normalised the API results -> input")
   private val conf = ConfigFactory.load()
 
   def name(): String = "Metrolink"
+
   def pluginType(): String = "command"
 
   def action(message: Message, args: String, client: SlackRtmClient) = {
     if (args.contains("stations")) {
-      client.sendMessage(message.channel, s"The following stations are available (match case for now): ${availableStations.mkString(", ")}")
+      apiRequest onSuccess {
+        case response => getAllLocations(message.channel, response, client)
+      }
     } else {
       apiRequest onSuccess {
         case response => filterAndRespond(message.channel, args, response, client)
@@ -56,24 +60,25 @@ class Metrolink extends Plugin {
 
   private def filterAndRespond(channel: String, args: String, response: String, client: SlackRtmClient) = {
     val responseList = parseResponse(response, args)
+    var resultString = ""
     if (!responseList.isEmpty) {
-
       val response = responseList(0)
-      var boardList = ArrayBuffer[String]()
-      if (!response.Dest0.equals("")) boardList += s"[${response.Carriages0}] ${response.Dest0} departs in ${response.Wait0} minutes"
-      if (!response.Dest1.equals("")) boardList += s"[${response.Carriages1}] ${response.Dest1} departs in ${response.Wait1} minutes"
-      if (!response.Dest2.equals("")) boardList += s"[${response.Carriages2}] ${response.Dest2} departs in ${response.Wait2} minutes"
+      resultString += s"*Trams due to depart from ${response.StationLocation}*\n"
 
-      if (boardList.isEmpty) {
-        client.sendMessage(channel, s"There are no services due to depart from ${response.StationLocation}.")
-      } else {
-        client.sendMessage(channel, s"Trams due to the depart from ${response.StationLocation}")
-        boardList.foreach { message =>
-          client.sendMessage(channel, message)
+      responseList foreach { response =>
+        var boardList = ArrayBuffer[String]()
+        if (!response.Dest0.equals("")) boardList += s"[${response.Carriages0}] ${response.Dest0} departs in ${response.Wait0} minutes"
+        if (!response.Dest1.equals("")) boardList += s"[${response.Carriages1}] ${response.Dest1} departs in ${response.Wait1} minutes"
+        if (!response.Dest2.equals("")) boardList += s"[${response.Carriages2}] ${response.Dest2} departs in ${response.Wait2} minutes"
+
+        if (boardList.isEmpty) {
+          resultString += s"There are no services due to depart from platform ${response.PIDREF.takeRight(2)}.\n"
+        } else {
+          resultString += s"*Platform ${response.PIDREF.takeRight(2)}*\n```${boardList.mkString("\n")}```\n"
         }
       }
-
-      client.sendMessage(channel, s"Message Board: ${response.MessageBoard}")
+      resultString += s"*Message Board*: ${response.MessageBoard}"
+      client.sendMessage(channel, resultString)
 
     } else {
       client.sendMessage(channel, s"There are no results for ${args}, you may have misspelled the location or there are no trams due.")
@@ -81,9 +86,29 @@ class Metrolink extends Plugin {
   }
 
   private def parseResponse(body: String, location: String) = {
+    val trains = parseJson(body)
+    val shortSearch = parseShort(location) match {
+      case None => ""
+      case Some(s) => s
+    }
+    val search = if (shortSearch.equals("")) location else shortSearch
+    trains.value.filter(_.StationLocation.toLowerCase == search.toLowerCase)
+  }
+
+  private def parseShort(location: String) = {
+    val shorts = Map("deansgate" -> "Deansgate - Castlefield")
+    shorts.get(location.toLowerCase)
+  }
+
+  private def parseJson(body: String) = {
     implicit val formats = DefaultFormats
-    val trains = parse(body).extract[Trains]
-    trains.value.filter(_.StationLocation == location)
+    parse(body).extract[Trains]
+  }
+
+  private def getAllLocations(channel: String, body: String, client: SlackRtmClient) = {
+    val trains = parseJson(body)
+    val stationList = trains.value.map {_.StationLocation}.distinct.mkString(", ")
+
+    client.sendMessage(channel, s"The following stations are available: ${stationList}")
   }
 }
-

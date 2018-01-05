@@ -16,7 +16,7 @@ object Main extends App {
   val selfId = client.state.self.id
 
   val manager = new PluginManager(client)
-  var executor = new PluginExecutor(client, manager)
+  val executor = new PluginExecutor(client, manager)
 
   manager.init()
 

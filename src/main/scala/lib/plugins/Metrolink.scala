@@ -34,7 +34,6 @@ case class Train(Id: Int,
                  PIDREF: String)
 
 class Metrolink extends Plugin {
-  private val availableStations = List("Piccadilly", "MediaCityUK", "Bury", "Deansgate", "A load more but I haven't yet normalised the API results -> input")
   private val conf = ConfigFactory.load()
 
   def name(): String = "Metrolink"
@@ -42,13 +41,10 @@ class Metrolink extends Plugin {
   def pluginType(): String = "command"
 
   def action(message: Message, args: String, client: SlackRtmClient) = {
-    if (args.contains("stations")) {
-      apiRequest onSuccess {
-        case response => getAllLocations(message.channel, response, client)
-      }
-    } else {
-      apiRequest onSuccess {
-        case response => filterAndRespond(message.channel, args, response, client)
+    apiRequest.map { result =>
+      args match {
+        case "stations" => client.sendMessage(message.channel, getAllLocations(result))
+        case _ => client.sendMessage(message.channel, filterAndRespond(args, result))
       }
     }
   }
@@ -58,7 +54,7 @@ class Metrolink extends Plugin {
     response.body
   }
 
-  private def filterAndRespond(channel: String, args: String, response: String, client: SlackRtmClient) = {
+  private def filterAndRespond(args: String, response: String) = {
     val responseList = parseResponse(response, args)
     var resultString = ""
     if (!responseList.isEmpty) {
@@ -78,10 +74,9 @@ class Metrolink extends Plugin {
         }
       }
       resultString += s"*Message Board*: ${response.MessageBoard}"
-      client.sendMessage(channel, resultString)
-
+      resultString
     } else {
-      client.sendMessage(channel, s"There are no results for ${args}, you may have misspelled the location or there are no trams due.")
+      s"There are no results for ${args}, you may have misspelled the location or there are no trams due."
     }
   }
 
@@ -105,10 +100,9 @@ class Metrolink extends Plugin {
     parse(body).extract[Trains]
   }
 
-  private def getAllLocations(channel: String, body: String, client: SlackRtmClient) = {
+  private def getAllLocations(body: String) = {
     val trains = parseJson(body)
     val stationList = trains.value.map {_.StationLocation}.distinct.mkString(", ")
-
-    client.sendMessage(channel, s"The following stations are available: ${stationList}")
+    s"The following stations are available: ${stationList}"
   }
 }

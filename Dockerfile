@@ -1,7 +1,7 @@
 FROM openjdk:jdk
 
-ENV SCALA_VERSION 2.11.11
-ENV SBT_VERSION 0.13.15
+ENV SCALA_VERSION 2.12.2
+ENV SBT_VERSION 1.0.4
 ENV SBT_OPTS -Xmx2G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -Xss2M -Duser.timezone=GMT
 
 # install scala
@@ -21,9 +21,4 @@ RUN \
 
 WORKDIR /qbert
 
-ADD . /qbert
-
 CMD sbt run
-
-
-

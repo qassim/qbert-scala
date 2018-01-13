@@ -4,6 +4,9 @@ version := "0.1"
 
 scalaVersion := "2.12.4"
 
+mainClass := Some("Bot")
+
+
 libraryDependencies ++= Seq(
   "com.github.gilbertw1" %% "slack-scala-client" % "0.2.2",
   "org.scalaj" %% "scalaj-http" % "2.3.0",

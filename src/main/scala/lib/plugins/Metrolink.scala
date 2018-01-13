@@ -67,9 +67,7 @@ class Metrolink extends Plugin {
         if (!response.Dest1.equals("")) boardList += s"[${response.Carriages1}] ${response.Dest1} departs in ${response.Wait1} minutes"
         if (!response.Dest2.equals("")) boardList += s"[${response.Carriages2}] ${response.Dest2} departs in ${response.Wait2} minutes"
 
-        if (boardList.isEmpty) {
-          resultString += s"There are no services due to depart from platform ${response.PIDREF.takeRight(2)}.\n"
-        } else {
+        if (!boardList.isEmpty) {
           resultString += s"*Platform ${response.PIDREF.takeRight(2)}*\n```${boardList.mkString("\n")}```\n"
         }
       }

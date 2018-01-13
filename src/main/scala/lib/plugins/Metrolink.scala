@@ -74,7 +74,7 @@ class Metrolink extends Plugin {
       resultString += s"*Message Board*: ${response.MessageBoard}"
       resultString
     } else {
-      s"There are no results for ${args}, you may have misspelled the location or there are no trams due."
+      s"There are no results for ${args}, you may have misspelled the location or there are no trams due. To see available stations, enter the command `${conf.getString("command.prefix")}${name().toLowerCase} stations`"
     }
   }
 
@@ -100,7 +100,7 @@ class Metrolink extends Plugin {
 
   private def getAllLocations(body: String) = {
     val trains = parseJson(body)
-    val stationList = trains.value.map {_.StationLocation}.distinct.mkString(", ")
+    val stationList = trains.value.map {_.StationLocation}.distinct.sorted.mkString(", ")
     s"The following stations are available: ${stationList}"
   }
 }

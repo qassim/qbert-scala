@@ -66,7 +66,8 @@ class Weather extends Plugin {
   def action(message: Message, args: String, client: SlackRtmClient) = {
 
     getWeather(args).map { result =>
-      client.sendMessage(message.channel, s"*${result.address}* | *Temperature*: ${result.weather.currently.temperature}°C. | *Currently*: ${result.weather.currently.summary} | *Humidity*: ${result.weather.currently.humidity * 100}% | *Day*: ${result.weather.hourly.summary}")
+
+      client.sendMessage(message.channel, s"*${result.address}* | *Temperature*: ${result.weather.currently.temperature}°C. | *Currently*: ${result.weather.currently.summary getOrElse "No summary"} | *Humidity*: ${result.weather.currently.humidity * 100}% | *Day*: ${result.weather.hourly.summary getOrElse "No day summary"}")
     }
   }
 

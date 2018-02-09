@@ -2,7 +2,7 @@ FROM openjdk:jdk
 
 ENV SCALA_VERSION 2.12.2
 ENV SBT_VERSION 1.0.4
-ENV SBT_OPTS -Xmx2G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -Xss2M -Duser.timezone=GMT
+ENV SBT_OPTS -Xmx512M -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -Xss50M -Duser.timezone=GMT
 
 # install scala
 RUN \

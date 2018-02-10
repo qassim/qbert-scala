@@ -19,6 +19,8 @@ RUN \
   rm -f sbt-$SBT_VERSION.deb scala-$SCALA_VERSION.deb && \
   sbt sbtVersion
 
+COPY . /qbert
+
 WORKDIR /qbert
 
 CMD sbt run

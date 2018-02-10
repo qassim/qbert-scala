@@ -4,11 +4,15 @@ node {
         checkout scm
     }
     stage("Build") {
-        docker.build("qassim/qbert-scala:${env.BUILD_ID}")
+        customImage = docker.build("qassim/qbert-scala:${env.BUILD_ID}")
     }
     stage("Push") {
         customImage.push()
         customImage.push('latest')
     }
-    stage("Deploy") {}
+    stage("Deploy") {
+        sshagent (credentials: ['docker-host']) {
+            sh 'ssh -o StrictHostKeyChecking=no qassim@docker-host "cd ~/qbert-scala && ./pull-and-restart.sh"'
+        }
+    }
 }

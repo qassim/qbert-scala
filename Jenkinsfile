@@ -1,9 +1,10 @@
 node {
+    def customImage
     stage("Checkout") {
         checkout scm
     }
     stage("Build") {
-        def customImage = docker.build("qassim/qbert-scala:${env.BUILD_ID}")
+        docker.build("qassim/qbert-scala:${env.BUILD_ID}")
     }
     stage("Push") {
         customImage.push()

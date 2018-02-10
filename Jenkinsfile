@@ -2,11 +2,16 @@ node {
     stage("Checkout") {
         checkout scm
     }
-    stage("Docker build") {
+    stage("Build") {
         def customImage = docker.build("qassim/qbert-scala:${env.BUILD_ID}")
     }
-    stage("Docker push") {
+    stage("Push") {
         customImage.push()
         customImage.push('latest')
+    }
+    stage("Deploy") {
+        sshagent(['docker-host']) {
+            sh 'ssh docker-host'
+        }
     }
 }

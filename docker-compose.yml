@@ -1,6 +1,6 @@
 version: '2'
 services:
   qbert:
-    image: qassim/qbert-slack:latest
+    image: qassim/qbert-scala
     volumes:
      - ./src/main/resources:/qbert/src/main/resources

@@ -23,4 +23,6 @@ COPY . /qbert
 
 WORKDIR /qbert
 
+RUN sbt compile
+
 CMD sbt run

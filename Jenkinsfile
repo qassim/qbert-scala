@@ -12,7 +12,7 @@ node {
     }
     stage("Deploy") {
         sshagent(['docker-host']) {
-            sh 'ssh docker-host'
+            sh 'ssh qassim@192.168.1.242'
         }
     }
 }

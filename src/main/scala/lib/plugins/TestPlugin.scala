@@ -8,7 +8,7 @@ class TestPlugin extends Plugin {
 
   def name(): String = "TestPlugin"
   def action(message: Message, args: String, client: SlackRtmClient) = {
-    client.sendMessage(message.channel, name)
+    client.sendMessage(message.channel, "This is a test. :smirk:")
   }
   def pluginType(): String = "command"
 }

@@ -5,16 +5,13 @@ import java.net.URLEncoder
 import lib.Plugin
 import slack.rtm.SlackRtmClient
 import slack.models.Message
-
 import scalaj.http.{Http, HttpResponse}
 import com.typesafe.config.ConfigFactory
-
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.json4s._
 import org.json4s.native.JsonMethods._
 
-import scala.util.{Failure, Success}
 
 
 class Weather extends Plugin {

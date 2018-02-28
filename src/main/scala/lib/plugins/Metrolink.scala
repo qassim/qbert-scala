@@ -13,31 +13,10 @@ import slack.rtm.SlackRtmClient
 
 import scala.collection.mutable.ArrayBuffer
 
-
-case class Trains(value: List[Train])
-
-case class Train(Id: Int,
-                 Line: String,
-                 StationLocation: String,
-                 Direction: String,
-                 MessageBoard: String,
-                 LastUpdated: String,
-                 Wait0: String,
-                 Wait1: String,
-                 Wait2: String,
-                 Dest0: String,
-                 Dest1: String,
-                 Dest2: String,
-                 Carriages0: String,
-                 Carriages1: String,
-                 Carriages2: String,
-                 PIDREF: String)
-
 class Metrolink extends Plugin {
   private val conf = ConfigFactory.load()
 
   def name(): String = "Metrolink"
-
   def pluginType(): String = "command"
 
   def action(message: Message, args: String, client: SlackRtmClient) = {
@@ -95,7 +74,7 @@ class Metrolink extends Plugin {
 
   private def parseJson(body: String) = {
     implicit val formats = DefaultFormats
-    parse(body).extract[Trains]
+    parse(body).extract[MetrolinkAPIModel.Trains]
   }
 
   private def getAllLocations(body: String) = {

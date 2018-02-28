@@ -3,7 +3,7 @@ package lib.plugins
 object MetrolinkAPIModel {
   case class Trains(value: List[Train])
 
-  case class Train(Id: Int, Line: String,
+  case class Train(Line: String,
                    StationLocation: String,
                    Direction: String,
                    MessageBoard: String,
@@ -16,6 +16,5 @@ object MetrolinkAPIModel {
                    Dest2: String,
                    Carriages0: String,
                    Carriages1: String,
-                   Carriages2: String,
-                   PIDREF: String)
+                   Carriages2: String)
 }

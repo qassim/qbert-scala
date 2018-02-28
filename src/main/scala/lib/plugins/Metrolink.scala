@@ -11,7 +11,7 @@ import org.json4s.native.JsonMethods._
 import slack.models.Message
 import slack.rtm.SlackRtmClient
 
-import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 class Metrolink extends Plugin {
   private val conf = ConfigFactory.load()
@@ -47,9 +47,10 @@ class Metrolink extends Plugin {
         if (!response.Dest2.equals("")) boardList += s"[${response.Carriages2}] ${response.Dest2} departs in ${response.Wait2} minutes"
 
         if (!boardList.isEmpty) {
-          resultString += s"*Platform ${response.PIDREF.takeRight(2)}*\n```${boardList.mkString("\n")}```\n"
+          resultString += s"*Platform*\n```${boardList.mkString("\n")}```\n"
         }
       }
+
       resultString += s"*Message Board*: ${response.MessageBoard}"
       resultString
     } else {
@@ -64,7 +65,7 @@ class Metrolink extends Plugin {
       case Some(s) => s
     }
     val search = if (shortSearch.equals("")) location else shortSearch
-    trains.value.filter(_.StationLocation.toLowerCase == search.toLowerCase)
+    trains.value.filter(_.StationLocation.toLowerCase == search.toLowerCase).filter(!_.Dest0.equals("")).distinct
   }
 
   private def parseShort(location: String) = {

@@ -1,17 +1,15 @@
 package lib.plugins
 
-import com.typesafe.config.ConfigFactory
 import lib.Plugin
-
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 import scalaj.http._
 import org.json4s._
 import org.json4s.native.JsonMethods._
+import com.typesafe.config.ConfigFactory
 import slack.models.Message
 import slack.rtm.SlackRtmClient
-
-import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 class Metrolink extends Plugin {
   private val conf = ConfigFactory.load()

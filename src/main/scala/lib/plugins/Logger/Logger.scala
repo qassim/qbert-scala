@@ -1,17 +1,16 @@
-package lib.plugins
+package lib.plugins.Logger
 
 import akka.actor.ActorSystem
-import slack.models.Message
-import slack.rtm.SlackRtmClient
 import com.typesafe.config.ConfigFactory
-
-import scala.util.{Failure, Success}
-import scala.concurrent.Future
-import scalaj.http._
+import lib.{Plugin, SlackAPI}
 import org.json4s._
 import org.json4s.native.Serialization.write
-import lib.Plugin
-import lib.SlackAPI
+import slack.models.Message
+import slack.rtm.SlackRtmClient
+
+import scala.concurrent.Future
+import scala.util.{Failure, Success}
+import scalaj.http._
 
 
 class Logger extends Plugin {

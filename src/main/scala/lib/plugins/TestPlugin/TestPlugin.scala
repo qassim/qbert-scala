@@ -1,4 +1,4 @@
-package lib.plugins
+package lib.plugins.TestPlugin
 
 import lib.Plugin
 import slack.models.Message

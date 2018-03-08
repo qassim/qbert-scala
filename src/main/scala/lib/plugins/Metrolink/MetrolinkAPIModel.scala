@@ -1,4 +1,4 @@
-package lib.plugins
+package lib.plugins.Metrolink
 
 object MetrolinkAPIModel {
   case class Trains(value: List[Train])

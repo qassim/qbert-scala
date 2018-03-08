@@ -1,4 +1,4 @@
-package lib.plugins
+package lib.plugins.UrbanDictionary
 
 object UrbanDictionaryAPIModel {
   case class ListBis(definition: String,

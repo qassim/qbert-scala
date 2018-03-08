@@ -1,4 +1,4 @@
-package lib.plugins
+package lib.plugins.SysInfo
 
 import lib.Plugin
 import slack.models.Message

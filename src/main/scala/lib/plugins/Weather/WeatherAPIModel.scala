@@ -1,4 +1,4 @@
-package lib.plugins
+package lib.plugins.Weather
 
 object WeatherAPIModel {
   case class Address_components(long_name: String, short_name: String, types: List[String])

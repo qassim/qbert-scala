@@ -1,5 +1,4 @@
-package lib.plugins
-
+package lib.plugins.UrbanDictionary
 
 import java.net.URLEncoder
 
@@ -9,8 +8,8 @@ import org.json4s.native.JsonMethods._
 import slack.models.Message
 import slack.rtm.SlackRtmClient
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scalaj.http.{Http, HttpResponse}
 
 class UrbanDictionary extends Plugin {

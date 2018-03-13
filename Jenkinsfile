@@ -13,7 +13,7 @@ node {
         }
         stage("Deploy") {
             sshagent (credentials: ['docker-host']) {
-                sh 'ssh -o StrictHostKeyChecking=no qassim@docker-host "cd ~/qbert-scala && ./pull-and-restart.sh"'
+                sh 'ssh -o StrictHostKeyChecking=no qassim@192.168.1.242 "cd ~/qbert-scala && ./pull-and-restart.sh"'
             }
         }
     }

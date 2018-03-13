@@ -4,7 +4,7 @@ import lib.Plugin
 import slack.models.Message
 import slack.rtm.SlackRtmClient
 
-class TestPlugin extends Plugin {
+class GoodShit extends Plugin {
 
   def name(): String = "goodshit"
   def action(message: Message, args: String, client: SlackRtmClient) = {

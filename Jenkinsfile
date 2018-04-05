@@ -4,7 +4,7 @@ node {
         checkout scm
     }
     stage("Build") {
-        customImage = docker.build("qassim/qbert-scala:${sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)}")
+        customImage = docker.build("qassim/qbert-scala:${sh (script: "git rev-parse --short HEAD", returnStdout: true)}")
     }
     if (env.BRANCH_NAME == "master"){
         stage("Push") {

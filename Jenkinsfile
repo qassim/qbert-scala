@@ -1,8 +1,9 @@
 node {
+    def GIT_COMMIT_HASH
     def customImage
     stage("Checkout") {
         checkout scm
-        def GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
+        GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
     }
     stage("Build") {
         customImage = docker.build("qassim/qbert-scala:${GIT_COMMIT_HASH}")

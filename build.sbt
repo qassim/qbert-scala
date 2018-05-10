@@ -8,7 +8,7 @@ mainClass := Some("Bot")
 
 
 libraryDependencies ++= Seq(
-  "com.github.gilbertw1" %% "slack-scala-client" % "0.2.2",
+  "com.github.gilbertw1" %% "slack-scala-client" % "0.2.3",
   "org.scalaj" %% "scalaj-http" % "2.3.0",
   "org.json4s" %% "json4s-native" % "3.6.0-M2",
   "com.typesafe" % "config" % "1.3.1",

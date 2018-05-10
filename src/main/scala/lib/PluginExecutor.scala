@@ -6,12 +6,11 @@ import slack.rtm.SlackRtmClient
 
 class PluginExecutor(client: SlackRtmClient, pluginManager: PluginManager) {
 
-  def exec(message: Message) = {
+  def exec(message: Message, prefix: String) = {
     val text = message.text
     val command = getCommand(text)
     val commandArgs = getArgs(text)
-    val conf = ConfigFactory.load()
-    val isCommand = text(0).toString.equals(conf.getString("command.prefix"))
+    val isCommand = text(0).toString.equals(prefix)
 
     pluginManager.getPlugins.foreach { pclass =>
         if (isCommand && pclass.name.toUpperCase.equals(command)) {

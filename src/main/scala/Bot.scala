@@ -11,6 +11,7 @@ object Main extends App {
 
   val conf = ConfigFactory.load()
   val token = conf.getString("slack.apikey")
+  val prefix = conf.getString("command.prefix")
 
   val client = SlackRtmClient(token)
   val selfId = client.state.self.id
@@ -21,6 +22,6 @@ object Main extends App {
   manager.init()
 
   client.onMessage { message =>
-      executor.exec(message)
+      executor.exec(message, prefix)
   }
 }

@@ -1,7 +1,7 @@
 package scala
 
 import akka.actor._
-import lib.{PluginExecutor, PluginManager}
+import lib.{PluginExecutor, PluginRepository}
 import slack.rtm.SlackRtmClient
 import com.typesafe.config._
 
@@ -16,10 +16,8 @@ object Main extends App {
   val client = SlackRtmClient(token)
   val selfId = client.state.self.id
 
-  val manager = new PluginManager(client)
-  val executor = new PluginExecutor(client, manager)
-
-  manager.init()
+  val plugins = PluginRepository.getPlugins
+  val executor = new PluginExecutor(client, plugins)
 
   client.onMessage { message =>
       executor.exec(message, prefix)

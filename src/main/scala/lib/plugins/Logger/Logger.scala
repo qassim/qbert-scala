@@ -16,24 +16,24 @@ import scalaj.http._
 class Logger extends Plugin {
   private implicit val system = ActorSystem("slack")
   private implicit val ec = system.dispatcher
+  private val api = new SlackAPI().client()
 
   private val conf = ConfigFactory.load()
 
   case class MessageLog(message: Message, displayName: String)
 
-  def name(): String = "Logger"
-  def pluginType(): String = "eventListener"
+  val name =  "Logger"
+  val pluginType = "eventListener"
 
   def action(message: Message, args: String, client: SlackRtmClient) = {
-    val api = new SlackAPI()
-    val client = api.client()
 
-    client.getUserInfo(message.user).map { result =>
-      writeLog(message, result.name) onComplete {
-        case Success(s) => println(s"Log: <${result.name}> ${message.text}")
-        case Failure(f) => println(f)
-      }
-    }
+    api.getUserInfo(message.user)
+      .map(result => writeLog(message, result.name)
+        .onComplete {
+          case Success(s) => println(s"Logged: <${result.name}> ${message.text}")
+          case Failure(f) => println(f)
+       }
+    )
   }
 
   def writeLog(message: Message, displayName: String) = Future {

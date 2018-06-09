@@ -19,8 +19,8 @@ class Weather extends Plugin {
   private val conf = ConfigFactory.load()
   implicit val formats = DefaultFormats
 
-  def name() = "Weather"
-  def pluginType() = "command"
+  val name = "Weather"
+  val pluginType = "command"
 
   def action(message: Message, args: String, client: SlackRtmClient) = {
     val results = for {
@@ -28,14 +28,14 @@ class Weather extends Plugin {
       weatherResult <- getWeather(locationData)
     } yield weatherResult
 
-    results.map { result =>
+    results.map(result =>
       client.sendMessage(message.channel,
         s"*${result.address}* | " +
         s"*Currently*: ${result.weather.currently.summary getOrElse "No summary"} ${getIcon(result.weather.currently.icon)} | " +
         s"*Temperature*: ${result.weather.currently.temperature}°C. *Feels like*: ${result.weather.currently.apparentTemperature}°C | " +
         s"*Humidity*: ${result.weather.currently.humidity * 100}% | " +
         s"*Day*: ${result.weather.hourly.summary getOrElse "No day summary"}")
-    }
+    )
   }
 
   private def getWeather(locationData: WeatherAPIModel.Results) = Future {
@@ -48,7 +48,7 @@ class Weather extends Plugin {
     val locationString = URLEncoder.encode(location, "UTF-8")
     val locationRequest: HttpResponse[String] =
       Http(s"https://maps.googleapis.com/maps/api/geocode/json?address=${locationString}&key=${conf.getString("plugin.weather.gmapi")}").asString
-    parse(locationRequest.body).extract[WeatherAPIModel.RootLocationJSON].results(0)
+    parse(locationRequest.body).extract[WeatherAPIModel.RootLocationJSON].results.head
   }
 
   private def getIcon(icon: String): String = {

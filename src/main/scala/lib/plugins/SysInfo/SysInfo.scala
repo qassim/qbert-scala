@@ -6,8 +6,8 @@ import slack.rtm.SlackRtmClient
 import java.lang.management.ManagementFactory
 
 class SysInfo extends Plugin {
-  def name(): String = "sysinfo"
-  def pluginType(): String = "command"
+  val name = "sysinfo"
+  val pluginType = "command"
 
 
   def action(message: Message, args: String, client: SlackRtmClient) = {

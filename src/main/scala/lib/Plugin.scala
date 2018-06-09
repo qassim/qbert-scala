@@ -4,7 +4,7 @@ import slack.models.Message
 import slack.rtm.SlackRtmClient
 
 trait Plugin {
-  def name: String
+  val name: String
+  val pluginType: String
   def action(message: Message, args: String, client: SlackRtmClient)
-  def pluginType: String
 }

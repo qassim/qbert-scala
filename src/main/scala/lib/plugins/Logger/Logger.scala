@@ -16,8 +16,9 @@ import scalaj.http._
 class Logger extends Plugin {
   private implicit val system = ActorSystem("slack")
   private implicit val ec = system.dispatcher
-  private val api = new SlackAPI().client()
+  private implicit val formats = DefaultFormats
 
+  private val api = new SlackAPI().client()
   private val conf = ConfigFactory.load()
 
   case class MessageLog(message: Message, displayName: String)
@@ -37,7 +38,6 @@ class Logger extends Plugin {
   }
 
   def writeLog(message: Message, displayName: String) = Future {
-    implicit val formats = DefaultFormats
     val log = MessageLog(message, displayName)
     Http(conf.getString("plugin.logger.endpoint")).postData(write(log))
       .header("content-type", "application/json")

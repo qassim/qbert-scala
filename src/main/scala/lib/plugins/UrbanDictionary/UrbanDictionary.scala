@@ -21,7 +21,6 @@ class UrbanDictionary extends Plugin {
   def action(message: Message, args: String, client: SlackRtmClient) = {
 
     getUrbanDefinition(args).map(result =>
-
       client.sendMessage(message.channel,
         s"*Word*: ${result.word}\n" +
         s"*Definition*: ${result.definition}\n" +

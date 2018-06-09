@@ -17,7 +17,7 @@ import scalaj.http.{Http, HttpResponse}
 
 class Weather extends Plugin {
   private val conf = ConfigFactory.load()
-  implicit val formats = DefaultFormats
+  private implicit val formats = DefaultFormats
 
   val name = "Weather"
   val pluginType = "command"
@@ -48,7 +48,10 @@ class Weather extends Plugin {
     val locationString = URLEncoder.encode(location, "UTF-8")
     val locationRequest: HttpResponse[String] =
       Http(s"https://maps.googleapis.com/maps/api/geocode/json?address=${locationString}&key=${conf.getString("plugin.weather.gmapi")}").asString
-    parse(locationRequest.body).extract[WeatherAPIModel.RootLocationJSON].results.head
+    parse(locationRequest.body)
+      .extract[WeatherAPIModel.RootLocationJSON]
+      .results
+      .head
   }
 
   private def getIcon(icon: String): String = {

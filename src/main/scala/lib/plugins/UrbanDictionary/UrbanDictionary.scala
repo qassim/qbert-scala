@@ -13,12 +13,12 @@ import scala.concurrent.Future
 import scalaj.http.{Http, HttpResponse}
 
 class UrbanDictionary extends Plugin {
-  implicit val formats = DefaultFormats
+  implicit val formats: DefaultFormats.type = DefaultFormats
 
   val name = "urban"
   val pluginType = "command"
 
-  def action(message: Message, args: String, client: SlackRtmClient) = getUrbanDefinition(args).map(result =>
+  def action(message: Message, args: String, client: SlackRtmClient): Unit = getUrbanDefinition(args).map(result =>
     client
       .sendMessage(message.channel,
         s"*Word*: ${result.word}\n" +
@@ -35,7 +35,7 @@ class UrbanDictionary extends Plugin {
   private def getUrbanDefinition(phrase: String) = Future {
     val phraseString = URLEncoder.encode(phrase, "UTF-8")
     val urbanRequest: HttpResponse[String] =
-      Http(s"https://api.urbandictionary.com/v0/define?term=${phraseString}").asString
+      Http(s"https://api.urbandictionary.com/v0/define?term=$phraseString").asString
     parse(urbanRequest.body).extract[UrbanDictionaryAPIModel.RootObj].list.head
   }
 }

@@ -5,9 +5,11 @@ import lib.{PluginExecutor, PluginRepository}
 import slack.rtm.SlackRtmClient
 import com.typesafe.config._
 
+import scala.concurrent.ExecutionContextExecutor
+
 object Main extends App {
-  implicit val system = ActorSystem("slack")
-  implicit val ec = system.dispatcher
+  implicit val system: ActorSystem = ActorSystem("slack")
+  implicit val ec: ExecutionContextExecutor = system.dispatcher
 
   val conf = ConfigFactory.load()
   val token = conf.getString("slack.apikey")

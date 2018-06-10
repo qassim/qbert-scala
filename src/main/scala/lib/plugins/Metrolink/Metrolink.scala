@@ -15,11 +15,11 @@ class Metrolink extends Plugin {
   val name = "Metrolink"
   val pluginType = "command"
 
-  private implicit val formats = DefaultFormats
+  private implicit val formats: DefaultFormats.type = DefaultFormats
   private val conf = ConfigFactory.load()
   private val shortcuts = Map("deansgate" -> "Deansgate - Castlefield")
 
-  def action(message: Message, args: String, client: SlackRtmClient) = apiRequest.map(result =>
+  def action(message: Message, args: String, client: SlackRtmClient): Unit = apiRequest().map(result =>
     args match {
       case "stations" => client.sendMessage(message.channel, getAllLocations(result))
       case _ => client.sendMessage(message.channel, constructResponse(args, result))
@@ -68,6 +68,6 @@ class Metrolink extends Plugin {
       .distinct
       .sorted
       .mkString(", ")
-    s"The following stations are available: ${stationList}"
+    s"The following stations are available: $stationList"
   }
 }

@@ -6,7 +6,7 @@ import org.clapper.classutil.{ClassFinder, ClassInfo}
 
 object PluginRepository {
 
-  def getPlugins(): List[Plugin] = {
+  def getPlugins: List[Plugin] = {
     val classpath = List(".").map(new File(_))
     val finder = ClassFinder(classpath)
     val classes = finder.getClasses

@@ -10,7 +10,7 @@ class SysInfo extends Plugin {
   val pluginType = "command"
 
 
-  def action(message: Message, args: String, client: SlackRtmClient) = {
+  def action(message: Message, args: String, client: SlackRtmClient): Unit = {
     val mb = 1024*1024
     val runtime = Runtime.getRuntime
     val runtimeBean = ManagementFactory.getRuntimeMXBean

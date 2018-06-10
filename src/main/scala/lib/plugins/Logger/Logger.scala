@@ -8,15 +8,15 @@ import org.json4s.native.Serialization.write
 import slack.models.Message
 import slack.rtm.SlackRtmClient
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.util.{Failure, Success}
 import scalaj.http._
 
 
 class Logger extends Plugin {
-  private implicit val system = ActorSystem("slack")
-  private implicit val ec = system.dispatcher
-  private implicit val formats = DefaultFormats
+  private implicit val system: ActorSystem = ActorSystem("slack")
+  private implicit val ec: ExecutionContextExecutor = system.dispatcher
+  private implicit val formats: DefaultFormats.type = DefaultFormats
 
   private val api = new SlackAPI().client()
   private val conf = ConfigFactory.load()
@@ -26,7 +26,7 @@ class Logger extends Plugin {
   val name =  "Logger"
   val pluginType = "eventListener"
 
-  def action(message: Message, args: String, client: SlackRtmClient) = for {
+  def action(message: Message, args: String, client: SlackRtmClient): Unit = for {
       user <- api.getUserInfo(message.user)
       code <- writeLog(message, user.name)
     } yield printLog(code, message, user.name)
@@ -40,8 +40,8 @@ class Logger extends Plugin {
       .asString.code
   }
 
-  private def printLog(code: Int, message: Message, username: String) = code match {
-      case 200 => println(s"Logged: <${username}> ${message.text}")
-      case _ =>   println(s"Error: Code: ${code} - Message: <${username}> ${message.text}")
+  private def printLog(code: Int, message: Message, username: String): Unit = code match {
+      case 200 => println(s"Logged: <$username> ${message.text}")
+      case _ =>   println(s"Error: Code: $code - Message: <$username> ${message.text}")
     }
 }

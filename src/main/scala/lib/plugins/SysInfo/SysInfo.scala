@@ -20,8 +20,6 @@ class SysInfo extends Plugin {
     val maxMemory = runtime.maxMemory / mb
     val uptime = runtimeBean.getUptime
 
-
-
     client.sendMessage(message.channel, s"*Memory* | *Used*: ${usedMemory}MB | *Free*: ${freeMemory}MB | *Total*: ${totalMemory}MB | *Max available*: ${maxMemory}MB | *Uptime*: ${(uptime / 1000) / 60} minutes")
 
   }

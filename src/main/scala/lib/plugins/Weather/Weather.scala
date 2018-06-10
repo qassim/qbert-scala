@@ -21,20 +21,15 @@ class Weather extends Plugin {
   val name = "Weather"
   val pluginType = "command"
 
-  def action(message: Message, args: String, client: SlackRtmClient) = {
-    val results = for {
+  def action(message: Message, args: String, client: SlackRtmClient) = for {
       locationData <- getLocation(args)
-      weatherResult <- getWeather(locationData)
-    } yield weatherResult
-
-    results.map(result =>
-      client.sendMessage(message.channel,
+      result <- getWeather(locationData)
+    } yield client.sendMessage(message.channel,
         s"*${result.address}* | " +
           s"*Currently*: ${result.weather.currently.summary getOrElse "No summary"} ${getIcon(result.weather.currently.icon)} | " +
           s"*Temperature*: ${result.weather.currently.temperature}°C. *Feels like*: ${result.weather.currently.apparentTemperature}°C | " +
           s"*Humidity*: ${result.weather.currently.humidity * 100}% | " +
-          s"*Day*: ${result.weather.hourly.summary getOrElse "No day summary"}"))
-  }
+          s"*Day*: ${result.weather.hourly.summary getOrElse "No day summary"}")
 
   private def getWeather(locationData: WeatherAPIModel.Results) = Future {
     val weatherRequest: HttpResponse[String] = Http(
@@ -58,7 +53,7 @@ class Weather extends Plugin {
       .head
   }
 
-  private def getIcon(icon: String): String = {
+  private def getIcon(icon: String) = {
     icon match {
       case "rain" => ":rain_cloud:"
       case "snow" => ":snow_cloud:"
@@ -73,6 +68,4 @@ class Weather extends Plugin {
       case _ => ""
     }
   }
-
-
 }

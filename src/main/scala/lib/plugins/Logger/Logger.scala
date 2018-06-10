@@ -26,22 +26,22 @@ class Logger extends Plugin {
   val name =  "Logger"
   val pluginType = "eventListener"
 
-  def action(message: Message, args: String, client: SlackRtmClient) = {
+  def action(message: Message, args: String, client: SlackRtmClient) = for {
+      user <- api.getUserInfo(message.user)
+      code <- writeLog(message, user.name)
+    } yield printLog(code, message, user.name)
 
-    api.getUserInfo(message.user)
-      .map(result => writeLog(message, result.name)
-        .onComplete {
-          case Success(s) => println(s"Logged: <${result.name}> ${message.text}")
-          case Failure(f) => println(f)
-       }
-    )
-  }
 
-  def writeLog(message: Message, displayName: String) = Future {
+  private def writeLog(message: Message, displayName: String) = Future {
     val log = MessageLog(message, displayName)
     Http(conf.getString("plugin.logger.endpoint")).postData(write(log))
       .header("content-type", "application/json")
       .header("key", conf.getString("plugin.logger.secret"))
       .asString.code
   }
+
+  private def printLog(code: Int, message: Message, username: String) = code match {
+      case 200 => println(s"Logged: <${username}> ${message.text}")
+      case _ =>   println(s"Error: Code: ${code} - Message: <${username}> ${message.text}")
+    }
 }

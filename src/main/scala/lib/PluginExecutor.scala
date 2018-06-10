@@ -9,10 +9,10 @@ class PluginExecutor(client: SlackRtmClient, plugins: List[Plugin]) {
     val text = message.text
     val command = getCommand(text)
     val commandArgs = getArgs(text)
-    val isCommand = text(0).toString.equals(prefix)
+    val isCommand = text(0).toString == prefix
 
     plugins.foreach { plugin =>
-        if (isCommand && plugin.name.toUpperCase.equals(command)) {
+        if (isCommand && plugin.name.toUpperCase == command) {
           plugin.action(message, commandArgs, client)
         } else if (plugin.pluginType.equals("eventListener") && !isCommand) {
           plugin.action(message, commandArgs, client)

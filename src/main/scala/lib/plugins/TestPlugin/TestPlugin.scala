@@ -7,8 +7,7 @@ import slack.rtm.SlackRtmClient
 class TestPlugin extends Plugin {
 
   val name = "TestPlugin"
-  def action(message: Message, args: String, client: SlackRtmClient) = {
-    client.sendMessage(message.channel, "This is a test. :smirk:")
-  }
   val pluginType = "command"
+
+  def action(message: Message, args: String, client: SlackRtmClient) = client.sendMessage(message.channel, "This is a test. :smirk:")
 }

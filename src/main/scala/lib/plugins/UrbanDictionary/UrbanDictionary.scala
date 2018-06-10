@@ -15,24 +15,22 @@ import scalaj.http.{Http, HttpResponse}
 class UrbanDictionary extends Plugin {
   implicit val formats = DefaultFormats
 
-  val name =  "urban"
+  val name = "urban"
   val pluginType = "command"
 
-  def action(message: Message, args: String, client: SlackRtmClient) = {
-
-    getUrbanDefinition(args).map(result =>
-      client.sendMessage(message.channel,
+  def action(message: Message, args: String, client: SlackRtmClient) = getUrbanDefinition(args).map(result =>
+    client
+      .sendMessage(message.channel,
         s"*Word*: ${result.word}\n" +
-        s"*Definition*: ${result.definition}\n" +
-        s"*Example*: ${result.example match {
-          case "" => "No example provided."
-          case _ => result.example
-        }} \n"+
-        s"`${result.permalink}`"
-      )
-
-    )
-  }
+          s"*Definition*: ${result.definition}\n" +
+          s"*Example*: ${
+            result.example match {
+              case "" => "No example provided."
+              case _ => result.example
+            }
+          } \n" +
+          s"`${result.permalink}`"
+      ))
 
   private def getUrbanDefinition(phrase: String) = Future {
     val phraseString = URLEncoder.encode(phrase, "UTF-8")

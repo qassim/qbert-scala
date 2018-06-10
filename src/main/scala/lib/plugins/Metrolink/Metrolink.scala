@@ -35,7 +35,7 @@ class Metrolink extends Plugin {
   private def constructResponse(args: String, response: String) = {
     var messageBoardString = ""
     parseResponse(response, args)
-      .map { response =>
+      .map(response => {
         var resultString = ""
         resultString += s"*Trams due to depart from ${response.StationLocation}*\n"
         if (response.Dest0 != "") resultString += s"*Platform*\n ```[${response.Carriages0}] ${response.Dest0} departs in ${response.Wait0} minutes\n"
@@ -44,7 +44,8 @@ class Metrolink extends Plugin {
         resultString += "```"
         messageBoardString = s" *Message Board*: ${response.MessageBoard}\n"
         resultString
-      }.mkString("\n") + messageBoardString
+      }
+    ).mkString("\n") + messageBoardString
   }
 
   private def parseResponse(body: String, location: String) = {
@@ -53,7 +54,8 @@ class Metrolink extends Plugin {
 
     trains.value
       .filter(_.StationLocation.toLowerCase == locationString.toLowerCase)
-      .filter(_.Dest0.nonEmpty).distinct
+      .filter(_.Dest0.nonEmpty)
+      .distinct
   }
 
   private def parseShort(location: String) = shortcuts.get(location.toLowerCase)
@@ -61,9 +63,11 @@ class Metrolink extends Plugin {
 
   private def getAllLocations(body: String) = {
     val trains = parseJson(body)
-    val stationList = trains.value.map {
-      _.StationLocation
-    }.distinct.sorted.mkString(", ")
+    val stationList = trains.value
+      .map(_.StationLocation)
+      .distinct
+      .sorted
+      .mkString(", ")
     s"The following stations are available: ${stationList}"
   }
 }

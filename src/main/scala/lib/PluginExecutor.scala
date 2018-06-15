@@ -11,15 +11,17 @@ class PluginExecutor(client: SlackRtmClient, plugins: List[Plugin]) {
     val commandArgs = getArgs(text)
     val isCommand = text(0).toString == prefix
 
-    plugins.foreach(plugin => {
-      if (isCommand && plugin.name.toUpperCase == command) {
-        plugin.action(message, commandArgs, client)
-      } else if (plugin.pluginType.equals("eventListener") && !isCommand) {
-        plugin.action(message, commandArgs, client)
+    plugins.foreach { plugin => {
+        if (isCommand && plugin.name.toUpperCase == command) {
+          plugin.action(message, commandArgs, client)
+        } else if (plugin.pluginType.equals("eventListener") && !isCommand) {
+          plugin.action(message, commandArgs, client)
+        }
       }
-    })
+    }
   }
 
   private def getCommand(text: String) = text.split(" ")(0).splitAt(1)._2.toUpperCase
+
   private def getArgs(text: String) = text.split(" ").splitAt(1)._2.mkString(" ")
 }

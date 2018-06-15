@@ -1,7 +1,7 @@
 package lib.plugins.Logger
 
 import akka.actor.ActorSystem
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.{Config, ConfigFactory}
 import lib.{Plugin, SlackAPI}
 import org.json4s._
 import org.json4s.native.Serialization.write
@@ -13,13 +13,12 @@ import scala.util.{Failure, Success}
 import scalaj.http._
 
 
-class Logger extends Plugin {
+class Logger(conf: Config) extends Plugin {
   private implicit val system: ActorSystem = ActorSystem("slack")
   private implicit val ec: ExecutionContextExecutor = system.dispatcher
   private implicit val formats: DefaultFormats.type = DefaultFormats
 
   private val api = new SlackAPI().client()
-  private val conf = ConfigFactory.load()
 
   case class MessageLog(message: Message, displayName: String)
 

@@ -5,7 +5,9 @@ import slack.models.Message
 import slack.rtm.SlackRtmClient
 import java.lang.management.ManagementFactory
 
-class SysInfo extends Plugin {
+import com.typesafe.config.{Config, ConfigFactory}
+
+class SysInfo(conf: Config) extends Plugin {
   val name = "sysinfo"
   val pluginType = "command"
 

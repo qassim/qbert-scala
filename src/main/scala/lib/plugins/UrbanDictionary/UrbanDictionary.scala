@@ -2,6 +2,7 @@ package lib.plugins.UrbanDictionary
 
 import java.net.URLEncoder
 
+import com.typesafe.config.{Config, ConfigFactory}
 import lib.Plugin
 import org.json4s._
 import org.json4s.native.JsonMethods._
@@ -12,7 +13,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scalaj.http.{Http, HttpResponse}
 
-class UrbanDictionary extends Plugin {
+class UrbanDictionary(conf: Config) extends Plugin {
   implicit val formats: DefaultFormats.type = DefaultFormats
 
   val name = "urban"

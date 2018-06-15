@@ -1,10 +1,11 @@
 package lib.plugins.GoodShit
 
+import com.typesafe.config.{Config, ConfigFactory}
 import lib.Plugin
 import slack.models.Message
 import slack.rtm.SlackRtmClient
 
-class GoodShit extends Plugin {
+class GoodShit(conf: Config) extends Plugin {
 
   val name = "goodshit"
   val pluginType = "command"

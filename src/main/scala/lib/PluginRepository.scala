@@ -1,10 +1,11 @@
 package lib
 import java.io.File
-
 import org.clapper.classutil.{ClassFinder, ClassInfo}
+import com.typesafe.config.{ConfigFactory, Config}
 
 
 object PluginRepository {
+  private val conf = ConfigFactory.load()
 
   def getPlugins: List[Plugin] = {
     val classpath = List(".").map(new File(_))
@@ -16,7 +17,10 @@ object PluginRepository {
     plugins.map(toPlugin)
   }
 
-  private def toPlugin(pd: ClassInfo): Plugin = {
-    Class.forName(pd.name).newInstance().asInstanceOf[lib.Plugin]
-  }
+  private def toPlugin(pd: ClassInfo): Plugin =
+    Class.forName(pd.name)
+      .getConstructor(classOf[Config])
+      .newInstance(conf: Config)
+      .asInstanceOf[lib.Plugin]
+
 }

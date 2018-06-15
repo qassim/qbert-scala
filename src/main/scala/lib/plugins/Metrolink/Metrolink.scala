@@ -1,6 +1,6 @@
 package lib.plugins.Metrolink
 
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.{Config, ConfigFactory}
 import lib.Plugin
 import org.json4s._
 import org.json4s.native.JsonMethods._
@@ -11,12 +11,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scalaj.http._
 
-class Metrolink extends Plugin {
+class Metrolink(conf: Config) extends Plugin {
   val name = "Metrolink"
   val pluginType = "command"
 
   private implicit val formats: DefaultFormats.type = DefaultFormats
-  private val conf = ConfigFactory.load()
   private val shortcuts = Map("deansgate" -> "Deansgate - Castlefield")
 
   def action(message: Message, args: String, client: SlackRtmClient): Unit = apiRequest().map(result =>

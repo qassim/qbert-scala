@@ -2,7 +2,7 @@ package lib.plugins.Weather
 
 import java.net.URLEncoder
 
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.{Config, ConfigFactory}
 import lib.Plugin
 import org.json4s._
 import org.json4s.native.JsonMethods._
@@ -14,8 +14,7 @@ import scala.concurrent.Future
 import scalaj.http.{Http, HttpResponse}
 
 
-class Weather extends Plugin {
-  private val conf = ConfigFactory.load()
+class Weather(conf: Config) extends Plugin {
   private implicit val formats: DefaultFormats.type = DefaultFormats
 
   val name = "Weather"

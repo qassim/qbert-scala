@@ -1,6 +1,6 @@
 package lib.plugins.GoodShit
 
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.Config
 import lib.Plugin
 import slack.models.Message
 import slack.rtm.SlackRtmClient

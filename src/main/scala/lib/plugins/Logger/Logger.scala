@@ -1,7 +1,7 @@
 package lib.plugins.Logger
 
 import akka.actor.ActorSystem
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.Config
 import lib.{Plugin, SlackAPI}
 import org.json4s._
 import org.json4s.native.Serialization.write

@@ -1,6 +1,6 @@
 package lib.plugins.Metrolink
 
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.Config
 import lib.Plugin
 import org.json4s._
 import org.json4s.native.JsonMethods._

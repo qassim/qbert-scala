@@ -8,10 +8,8 @@ object PluginRepository {
   private val conf = ConfigFactory.load()
 
   def getPlugins: List[Plugin] = {
-    val classpath = List(".").map(new File(_))
-    val finder = ClassFinder(classpath)
-    val classes = finder.getClasses
-    val classMap = ClassFinder.classInfoMap(classes)
+    val classPath = List(".").map(new File(_))
+    val classMap = ClassFinder(classPath).getClasses.classInfoMap(classes)
     val plugins: List[ClassInfo] = ClassFinder.concreteSubclasses("lib.Plugin", classMap).toList
 
     plugins.map(toPlugin)

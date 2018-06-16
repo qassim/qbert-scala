@@ -2,7 +2,7 @@ package lib.plugins.Weather
 
 import java.net.URLEncoder
 
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.Config
 import lib.Plugin
 import org.json4s._
 import org.json4s.native.JsonMethods._
@@ -20,7 +20,7 @@ class Weather(conf: Config) extends Plugin {
   val name = "Weather"
   val pluginType = "command"
 
-  def action(message: Message, args: String, client: SlackRtmClient): Unit = {
+  def action(message: Message, args: String, client: SlackRtmClient): Unit =
     for {
       locationData <- getLocation(args)
       result <- getWeather(locationData)
@@ -32,7 +32,7 @@ class Weather(conf: Config) extends Plugin {
           s"*Humidity*: ${result.weather.currently.humidity * 100}% | " +
           s"*Day*: ${result.weather.hourly.summary getOrElse "No day summary"}")
     }
-  }
+
 
   private def getWeather(locationData: WeatherAPIModel.Results) = Future {
     val requestURL = s"https://api.darksky.net/forecast/${conf.getString("plugin.weather.fcio")}/${locationData.geometry.location.lat},${locationData.geometry.location.lng}?units=uk2"
@@ -52,7 +52,8 @@ class Weather(conf: Config) extends Plugin {
       .head
   }
 
-  private def getIcon(icon: String) = icon match {
+  private def getIcon(icon: String) =
+    icon match {
       case "rain" => ":rain_cloud:"
       case "snow" => ":snow_cloud:"
       case "clear-day" => ":sunny:"

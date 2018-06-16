@@ -2,7 +2,7 @@ package lib.plugins.UrbanDictionary
 
 import java.net.URLEncoder
 
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.Config
 import lib.Plugin
 import org.json4s._
 import org.json4s.native.JsonMethods._
@@ -19,24 +19,30 @@ class UrbanDictionary(conf: Config) extends Plugin {
   val name = "urban"
   val pluginType = "command"
 
-  def action(message: Message, args: String, client: SlackRtmClient): Unit = getUrbanDefinition(args).map(result =>
-    client
-      .sendMessage(message.channel,
-        s"*Word*: ${result.word}\n" +
-          s"*Definition*: ${result.definition}\n" +
-          s"*Example*: ${
-            result.example match {
-              case "" => "No example provided."
-              case _ => result.example
-            }
-          } \n" +
-          s"`${result.permalink}`"
-      ))
+  def action(message: Message, args: String, client: SlackRtmClient): Unit =
+    getUrbanDefinition(args)
+      .map(result => {
+        val example = result.example match {
+            case "" => "No example provided."
+            case _ => result.example
+          }
+        val response =
+            s"*Word*: ${result.word}\n" +
+            s"*Definition*: ${result.definition}\n" +
+            s"*Example*: ${example} \n" +
+            s"`${result.permalink}`"
+
+        client.sendMessage(message.channel, response)
+      })
 
   private def getUrbanDefinition(phrase: String) = Future {
     val phraseString = URLEncoder.encode(phrase, "UTF-8")
-    val urbanRequest: HttpResponse[String] =
-      Http(s"https://api.urbandictionary.com/v0/define?term=$phraseString").asString
-    parse(urbanRequest.body).extract[UrbanDictionaryAPIModel.RootObj].list.head
+    val requestURL = s"https://api.urbandictionary.com/v0/define?term=$phraseString"
+    val urbanRequest: HttpResponse[String] = Http(requestURL).asString
+
+    parse(urbanRequest.body)
+      .extract[UrbanDictionaryAPIModel.RootObj]
+      .list
+      .head
   }
 }

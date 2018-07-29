@@ -9,7 +9,6 @@ import slack.models.Message
 import slack.rtm.SlackRtmClient
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
-import scala.util.{Failure, Success}
 import scalaj.http._
 
 

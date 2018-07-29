@@ -31,21 +31,18 @@ class Metrolink(conf: Config) extends Plugin {
       .body
   }
 
-  private def constructResponse(args: String, response: String) = {
-    var messageBoardString = ""
-    parseResponse(response, args)
-      .map(response => {
-        var resultString = ""
-        resultString += s"*Trams due to depart from ${response.StationLocation}*\n"
-        if (response.Dest0 != "") resultString += s"*Platform*\n ```[${response.Carriages0}] ${response.Dest0} departs in ${response.Wait0} minutes\n"
-        if (response.Dest1 != "") resultString += s"[${response.Carriages1}] ${response.Dest1} departs in ${response.Wait1} minutes\n"
-        if (response.Dest2 != "") resultString += s"[${response.Carriages2}] ${response.Dest2} departs in ${response.Wait2} minutes\n"
-        resultString += "```"
-        messageBoardString = s" *Message Board*: ${response.MessageBoard}\n"
-        resultString
-      }
-    ).mkString("\n") + messageBoardString
-  }
+  private def constructResponse(args: String, response: String) = parseResponse(response, args)
+    .map(response => {
+      var resultString = s"*Trams due to depart from ${response.StationLocation}*\n"
+      if (response.Dest0 != "") resultString += s"*Platform*\n ```[${response.Carriages0}] ${response.Dest0} departs in ${response.Wait0} minutes\n"
+      if (response.Dest1 != "") resultString += s"[${response.Carriages1}] ${response.Dest1} departs in ${response.Wait1} minutes\n"
+      if (response.Dest2 != "") resultString += s"[${response.Carriages2}] ${response.Dest2} departs in ${response.Wait2} minutes\n"
+      resultString += "```"
+      resultString += s" *Message Board*: ${response.MessageBoard}\n"
+      resultString
+    }
+    ).mkString("\n")
+
 
   private def parseResponse(body: String, location: String) = {
     val trains = parseJson(body)
@@ -58,6 +55,7 @@ class Metrolink(conf: Config) extends Plugin {
   }
 
   private def parseShort(location: String) = shortcuts.get(location.toLowerCase)
+
   private def parseJson(body: String) = parse(body).extract[MetrolinkAPIModel.Trains]
 
   private def getAllLocations(body: String) = {

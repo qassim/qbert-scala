@@ -22,10 +22,13 @@ class UrbanDictionary(conf: Config) extends Plugin {
   def action(message: Message, args: String, client: SlackRtmClient): Unit =
     getUrbanDefinition(args)
       .map(result => {
+
+        println(result)
         val example = result.example match {
             case "" => "No example provided."
             case _ => result.example
           }
+
         val response =
             s"*Word*: ${result.word}\n" +
             s"*Definition*: ${result.definition}\n" +
@@ -39,7 +42,7 @@ class UrbanDictionary(conf: Config) extends Plugin {
     val phraseString = URLEncoder.encode(phrase, "UTF-8")
     val requestURL = s"https://api.urbandictionary.com/v0/define?term=$phraseString"
     val urbanRequest: HttpResponse[String] = Http(requestURL).asString
-
+    println(urbanRequest.body)
     parse(urbanRequest.body)
       .extract[UrbanDictionaryAPIModel.RootObj]
       .list

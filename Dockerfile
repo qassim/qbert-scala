@@ -1,4 +1,4 @@
-FROM openjdk:jdk
+FROM williamyeh/java8
 
 ENV SCALA_VERSION 2.12.2
 ENV SBT_VERSION 1.0.4

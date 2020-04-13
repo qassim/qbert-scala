@@ -35,8 +35,8 @@ class Metrolink(conf: Config) extends Plugin {
     .map(response => {
       var resultString = s"*Trams due to depart from ${response.StationLocation}*\n"
       if (response.Dest0 == "") resultString += s"_There are currently no trams scheduled to depart from this station_\n"
-      if (response.Dest0 != "") resultString += "```"
-      if (response.Dest0 != "") resultString += s"*Platform*\n[${response.Carriages0}] ${response.Dest0} departs in ${response.Wait0} minutes\n"
+      if (response.Dest0 != "") resultString += "*Platform*\n```"
+      if (response.Dest0 != "") resultString += s"\n[${response.Carriages0}] ${response.Dest0} departs in ${response.Wait0} minutes\n"
       if (response.Dest1 != "") resultString += s"[${response.Carriages1}] ${response.Dest1} departs in ${response.Wait1} minutes\n"
       if (response.Dest2 != "") resultString += s"[${response.Carriages2}] ${response.Dest2} departs in ${response.Wait2} minutes\n"
       if (response.Dest0 != "") resultString += "```"

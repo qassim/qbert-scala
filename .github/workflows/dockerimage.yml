@@ -17,7 +17,6 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
     - uses: elgohr/Publish-Docker-Github-Action@2.14
-    - name: Push docker image  
       with:
         name: qassim/qbert-scala
         username: ${{ secrets.DOCKER_USERNAME }}

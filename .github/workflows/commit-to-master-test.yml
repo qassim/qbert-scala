@@ -1,0 +1,36 @@
+name: Scala CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    
+env:
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔍 GH_TOKEN
+        if: env.GH_TOKEN == ''
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "GH_TOKEN=${GITHUB_TOKEN}" >> $GITHUB_ENV
+
+      - name: 🤘 checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: main
+          token: ${{ env.GH_TOKEN }}
+
+      - name: commit to master
+        run: |
+          git config --local user.name github-actions
+          git config --local user.email github-actions@github.com
+          echo "test" >> test.txt
+          git add test.txt
+          git commit -m "Test"
+          git push
